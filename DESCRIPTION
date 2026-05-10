@@ -1,0 +1,41 @@
+Package: poker.survival.analysis
+Type: Project
+Title: Poker Player Survival Analysis (Survival + Clustering + Ordinal Logit + XGBoost)
+Version: 0.1.0
+Authors@R: person("Ren", "Jianhang", role = c("aut", "cre"),
+                  email = "renjh76@example.com")
+Description: 把流行病学/可靠性工程中的生存分析方法迁移到德州扑克玩家行为数据,
+    结合 K-Means 行为聚类、有序 Logistic 回归与 XGBoost 基线,
+    构建一个 “描述-推断-分类-预测” 四位一体的玩家分析流水线。
+License: MIT
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 4.1.0)
+Imports:
+    survival,
+    survminer,
+    cluster,
+    factoextra,
+    MASS,
+    effects,
+    xgboost,
+    SHAPforxgboost,
+    ggplot2,
+    dplyr,
+    tidyr,
+    tibble,
+    purrr,
+    readr,
+    scales,
+    shiny,
+    shinydashboard,
+    DT,
+    plotly,
+    gridExtra
+Suggests:
+    rmarkdown,
+    knitr,
+    testthat,
+    DiagrammeR,
+    fmsb
+RoxygenNote: 7.3.1
