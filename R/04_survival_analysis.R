@@ -50,7 +50,7 @@ build_survival_data <- function(hands, features,
     dplyr::mutate(
       bust       = as.integer(min_stack <= 0),
       churn      = as.integer((obs_end_day - last_day) > inactive_days),
-      event      = pmax(bust, churn),
+      event      = bust,
       time       = pmax(last_day - first_day + 1L, 1L)
     )
 

@@ -82,10 +82,11 @@ label_clusters <- function(centroids_df) {
   centroids_df %>%
     dplyr::mutate(
       style_label = dplyr::case_when(
+        VPIP <= 0.27 & PFR / pmax(VPIP, 1e-3) >= 0.55 & AF >= 1.5 & bb_per_100 >= 15  ~ "TAG-Pro (紧凶高手)",
         VPIP <= 0.27 & PFR / pmax(VPIP, 1e-3) >= 0.55 & AF >= 1.5 ~ "TAG (紧凶)",
         VPIP >  0.27 & PFR / pmax(VPIP, 1e-3) >= 0.55 & AF >= 1.5 ~ "LAG (松凶)",
         VPIP <= 0.27 & AF <  1.5                                  ~ "TP  (紧弱)",
-        VPIP >  0.40 & AF <  1.0                                  ~ "Fish (鱼)",
+        VPIP >  0.40 & AF <  1.0                                  ~ "Fish (鱼)(松弱)",
         TRUE                                                      ~ "LP  (松弱)"
       )
     )

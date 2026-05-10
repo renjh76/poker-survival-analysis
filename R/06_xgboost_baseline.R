@@ -55,7 +55,8 @@ train_xgb <- function(df, feat_cols, test_frac = 0.25, nrounds = 200,
     max_depth        = 4,
     subsample        = 0.85,
     colsample_bytree = 0.85,
-    min_child_weight = 5
+    min_child_weight = 1,
+    scale_pos_weight = sum(y_train == 0) / sum(y_train == 1)
   )
 
   model <- xgb.train(
@@ -73,12 +74,10 @@ train_xgb <- function(df, feat_cols, test_frac = 0.25, nrounds = 200,
 
 #' 计算 AUC(无依赖,梯形法)
 auc_score <- function(prob, label) {
-  ord  <- order(prob, decreasing = TRUE)
-  prob <- prob[ord]; label <- label[ord]
+  if (length(unique(label)) < 2) return(NA_real_)
   n_pos <- sum(label == 1); n_neg <- sum(label == 0)
-  if (n_pos == 0 || n_neg == 0) return(NA_real_)
-  rank_sum <- sum(which(label == 1))
-  (rank_sum - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg)
+  rk <- rank(prob)
+  (sum(rk[label == 1]) - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg)
 }
 
 #' 混淆矩阵 + 关键指标(threshold = 0.5)
@@ -111,7 +110,7 @@ plot_shap_summary <- function(model, X_train,
 
 run_xgboost_baseline <- function(processed_dir = "data/processed",
                                  fig_dir       = "figures",
-                                 horizon_days  = 30) {
+                                 horizon_days  = 360) {
   dir.create(fig_dir, showWarnings = FALSE, recursive = TRUE)
 
   surv_df <- readRDS(file.path(processed_dir, "survival_data.rds"))

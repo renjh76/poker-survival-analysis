@@ -88,11 +88,11 @@ sample_players <- function(n, priors = STYLE_PRIORS) {
 style_action_table <- function() {
   tibble::tribble(
     ~style, ~vpip_mu, ~pfr_mu, ~threebet_mu, ~agg_mu, ~bb100_mu,
-    "TAG",   0.22,    0.18,    0.07,         3.0,     8,
-    "LAG",   0.32,    0.26,    0.10,         3.5,     2,
-    "TP",    0.20,    0.06,    0.02,         0.6,    -2,
-    "LP",    0.42,    0.10,    0.03,         0.8,    -8,
-    "Fish",  0.55,    0.08,    0.02,         0.5,   -15
+    "TAG",   0.22,    0.18,    0.07,         3.0,     25,
+    "LAG",   0.32,    0.26,    0.10,         3.5,     8,
+    "TP",    0.20,    0.06,    0.02,         0.6,     -8,
+    "LP",    0.42,    0.10,    0.03,         0.8,     -22,
+    "Fish",  0.55,    0.08,    0.02,         0.5,     -38
   )
 }
 
@@ -145,10 +145,11 @@ simulate_player_hands <- function(player, n_hands, start_day, days_span,
   ev_per_hand_bb <- (par$bb100_mu + 4 * player$true_skill) / 100
   ev_dollar     <- ev_per_hand_bb * big_blind
   win_amount    <- rnorm(n_hands, mean = ev_dollar,
-                         sd = big_blind * 8)  # 高方差
+                         sd = big_blind * 3)  # 高方差
 
   # 当前筹码:从初始筹码开始累计
   stack_path <- player$init_stack + cumsum(win_amount)
+  stack_path <- pmax(stack_path, 0)   # 破产后筹码截断为 0
 
   tibble::tibble(
     player_id     = player$player_id,
